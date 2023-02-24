@@ -1,22 +1,31 @@
-const argv = require("yargs").argv;
+const yargs = require("yargs");
 
-// TODO: рефакторить
-function invokeAction({ action, id, name, email, phone }) {
+const { hideBin } = require("yargs/helpers");
+
+const {listContacts, getContactById, removeContact, addContact} = require("./contacts");
+
+
+
+async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
-    case "list":
-      // ...
+    case "list": 
+      const allContacts = await listContacts();
+      console.log(allContacts);
       break;
 
     case "get":
-      // ... id
+      const oneContact = await getContactById(id);
+      console.log(oneContact);
       break;
-
+ 
     case "add":
-      // ... name email phone
+      const newContact = await addContact({ name, email, phone });
+      console.log(newContact);
       break;
 
     case "remove":
-      // ... id
+      const removedContact = await removeContact(id);
+      console.log(removedContact);
       break;
 
     default:
@@ -24,4 +33,6 @@ function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
+const arr = hideBin(process.argv);
+const { argv } = yargs(arr);
 invokeAction(argv);
